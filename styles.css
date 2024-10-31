@@ -1,0 +1,31 @@
+/* Fondo con imagen */
+body {
+    background: url('fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.highlight-left {
+    color: red;
+    font-weight: bold;
+}
+
+.highlight-right {
+    color: green;
+    font-weight: bold;
+}
+
+/* Footer styles for positioning */
+footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    background-color: #f5f5f5;
+}

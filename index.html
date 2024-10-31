@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrada de IPv4 y Prefijo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Calculadora IPV4</h1>
+        <form id="ipv4Form">
+            <div class="form-group">
+                <label for="ipv4">Dirección IPv4:</label>
+                <input type="text" class="form-control" id="ipv4" name="ipv4" placeholder="Ejemplo: 192.168.1.1"
+                    required pattern="^(\d{1,3}\.){3}\d{1,3}$" title="Debe ser una dirección IPv4 válida">
+            </div>
+            <div class="form-group">
+                <label for="prefix">Prefijo (1-32):</label>
+                <input type="number" class="form-control" id="prefix" name="prefix" placeholder="Ejemplo: 24" min="1"
+                    max="32" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+
+        <div id="result" class="mt-4 d-none">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Información de la IP</h5>
+                            <p id="ipv4Info"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Detalles de Red</h5>
+                            <p id="networkDetails"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Clasificación</h5>
+                            <p id="classificationDetails"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center">
+        <p>&copy; Creado por Kevin Gonzalez</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
