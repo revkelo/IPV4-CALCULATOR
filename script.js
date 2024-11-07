@@ -96,19 +96,23 @@ function formatBinaryIPv4(binary, prefix) {
         groups.push(binary.slice(start, end));
     }
 
-    // Resaltar los bits del prefijo en rojo
+    // Resaltar los bits del prefijo en rojo y los bits a la derecha en verde
     const highlightedBinary = groups.map((group, index) => {
         if (index < Math.floor(prefix / 8)) {
-            return `<span style="color: red;">${group}</span>`; // Resaltar grupos completos
+            return `<span class="highlight-left">${group}</span>`; // Resaltar grupo completo en rojo
         } else if (index === Math.floor(prefix / 8)) {
             const bitsToHighlight = prefix % 8;
-            return `<span style="color: red;">${group.slice(0, bitsToHighlight)}</span>${group.slice(bitsToHighlight)}`; // Resaltar parte del grupo
+            const highlightedPrefix = `<span class="highlight-left">${group.slice(0, bitsToHighlight)}</span>`; // Resaltar parte del grupo en rojo
+            const remainingBits = group.slice(bitsToHighlight);
+            return highlightedPrefix + `<span class="highlight-right">${remainingBits}</span>`; // Resaltar parte restante en verde
         }
-        return group; // Dejar grupos restantes sin resaltar
+        return `<span class="highlight-right">${group}</span>`; // Resaltar grupos completos a la derecha del prefijo en verde
     }).join('.'); // Unir grupos con puntos
 
     return highlightedBinary;
 }
+
+
 
 function determineIPClass(ipv4) {
     const firstOctet = parseInt(ipv4.split('.')[0]);
