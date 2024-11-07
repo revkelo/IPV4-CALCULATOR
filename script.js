@@ -1,6 +1,6 @@
 document.getElementById('ipv4Form').addEventListener('submit', function (event) {
     event.preventDefault();
-    document.getElementById('result').classList.remove('d-none');
+
 
     const ipv4 = document.getElementById('ipv4').value;
     const prefix = parseInt(document.getElementById('prefix').value);
@@ -30,9 +30,9 @@ document.getElementById('ipv4Form').addEventListener('submit', function (event) 
             if (response.data) {
                 const jsonData = convertHtmlToJson(response.data);
 
-                // Mostrar el resultado en la interfaz
-                $('.kq-ip1').removeClass('d-none');
-                $('.kq-ip1').html(JSON.stringify(jsonData, null, 2)); // Mostrar como texto JSON
+
+
+
 
                 // Extraer información del JSON
                 const ipUtil = jsonData['Network Address:'];
@@ -40,10 +40,13 @@ document.getElementById('ipv4Form').addEventListener('submit', function (event) 
                 const usableRange = jsonData['Usable Host IP Range:'].split(' - ');
                 const usableStart = usableRange[0];
                 const usableEnd = usableRange[1];
-                const highlightedBinary = formatBinaryIPv4(jsonData['Binary ID:'],prefix);
+                const highlightedBinary = formatBinaryIPv4(jsonData['Binary ID:'], prefix);
                 const subnetMask = jsonData['Subnet Mask:'];
-                const ipClass = jsonData['IP Class:'];
-                const isPrivate = jsonData['IP Type:'] === "Private" ? "Sí" : "No";
+                const ipClass = determineIPClass(ipv4);
+                const isPrivate = isPrivateIP(ipv4) ? 'Sí' : 'No';
+
+                const hexID = jsonData['Hex ID:'];
+                const iPv4MappedAddress = jsonData['IPv4 Mapped Address:'];
                 const totalHosts = jsonData['Total Number of Hosts:'];
                 const usableHosts = jsonData['Number of Usable Hosts:'];
 
@@ -60,19 +63,27 @@ document.getElementById('ipv4Form').addEventListener('submit', function (event) 
                 document.getElementById('networkDetails').innerHTML = `
                     <strong>IP de Red:</strong> ${ipUtil}<br>
                     <strong>Dirección de Broadcast:</strong> ${broadcastIP}<br>
-                    <strong>Rango de IP útiles:</strong> ${usableStart} - ${usableEnd}
+                    <strong>Rango de IP útiles:</strong> ${usableStart} - ${usableEnd}<br>
+                    <strong>IPv4 Mapped Address:</strong> ${iPv4MappedAddress}<br>
+                              <strong>Hex ID:</strong> ${hexID}<br>
                 `;
 
                 document.getElementById('classificationDetails').innerHTML = `
                     <strong>Clase de IP:</strong> ${ipClass}<br>
                     <strong>¿Es IP privada?</strong> ${isPrivate}
                 `;
+
+                // Mostrar el resultado en la interfaz
+                $('.kq-ip1').removeClass('d-none');
+                $('.kq-ip1').html(JSON.stringify(jsonData, null, 2)); // Mostrar como texto JSON
+                document.getElementById('result').classList.remove('d-none');
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert('Error en la solicitud: ' + textStatus);
         }
     });
+
 });
 
 
@@ -99,7 +110,21 @@ function formatBinaryIPv4(binary, prefix) {
     return highlightedBinary;
 }
 
+function determineIPClass(ipv4) {
+    const firstOctet = parseInt(ipv4.split('.')[0]);
+    if (firstOctet < 128) return 'A';
+    else if (firstOctet < 192) return 'B';
+    else if (firstOctet < 224) return 'C';
+    else if (firstOctet < 240) return 'D';
+    return 'E';
+}
 
+function isPrivateIP(ipv4) {
+    const [firstOctet, secondOctet] = ipv4.split('.').map(Number);
+    return (firstOctet === 10) ||
+        (firstOctet === 172 && secondOctet >= 16 && secondOctet <= 31) ||
+        (firstOctet === 192 && secondOctet === 168);
+}
 function convertHtmlToJson(html) {
     var jsonResult = {};
     var $html = $(html); // Convertir el HTML a un objeto jQuery
